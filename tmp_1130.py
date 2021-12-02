@@ -1,16 +1,3 @@
-from itertools import zip_longest
-import sys
-
-w1 = "apple"
-w2 = "apply"
-w3 = "art"
-w4 = "task"
-w5 = "teach"
-w6 = "flash"
-
-words = [w1, w2, w3, w4, w5, w6]
-
-
 class Trie:
     is_word = "is_word"
 
@@ -18,7 +5,7 @@ class Trie:
         self.root = self._get_default_node()
 
     @staticmethod
-    def _get_default_node():
+    def _get_default_node() -> dict:
         return {Trie.is_word: False}
 
     def has_word(self, word: str) -> bool:
@@ -60,7 +47,7 @@ class Trie:
             else:
                 current_node.update({Trie.is_word: False})
 
-    def _get_all_words(self, node: dict, result: [str, ...], prefix: str = "") -> None:
+    def _get_all_words(self, node: dict, result: [str, ...], prefix: str="") -> None:
         for k, v in node.items():
             if k == Trie.is_word:
                 if v is True:
@@ -81,9 +68,17 @@ class Trie:
 
 
 if __name__ == "__main__":
+    w1 = "apple"
+    w2 = "apply"
+    w3 = "art"
+    w4 = "task"
+    w5 = "teach"
+    w6 = "flash"
+
+    words = [w1, w2, w3, w4, w5, w6]
     trie = Trie()
-    for word in words:
-        trie.add_word(word)
+    for w in words:
+        trie.add_word(w)
     print(trie.enumerate_words(""))
     print(trie.enumerate_words("a"))
     print(trie.enumerate_words("app"))
@@ -96,3 +91,4 @@ if __name__ == "__main__":
     trie.remove_word("a")
     print(trie.enumerate_words(""))
     trie.remove_word("123")
+    print(trie.enumerate_words("c"))
