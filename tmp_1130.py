@@ -12,16 +12,16 @@ class Trie:
     def _is_word_valid(word):
         return isinstance(word, str) and word.isalpha() and word.islower()
 
-    def has_word(self, word: str) -> bool:
-        if not self._is_word_valid(word):
-            return False
-
+    def _is_word_exist(self, word):
         current_node = self.root
         for letter in word:
             if not current_node.get(letter):
                 return False
             current_node = current_node.get(letter)
         return current_node.get(Trie.is_word)
+
+    def has_word(self, word: str) -> bool:
+        return self._is_word_valid(word) and self._is_word_exist(word)
 
     def add_word(self, word: str) -> None:
         if self._is_word_valid(word):
@@ -74,23 +74,3 @@ class Trie:
             if current_node:
                 self._get_all_words(current_node, result, prefix)
         return result
-
-
-if __name__ == "__main__":
-    w1 = "apple"
-    w2 = "apply"
-    w3 = "art"
-    w4 = "task"
-    w5 = "teach"
-    w6 = "flash"
-
-    words = [w1, w2, w3, w4, w5, w6]
-    trie = Trie()
-    for w in words:
-        trie.add_word(w)
-    print(trie.enumerate_words())
-    trie.add_word("")
-    trie.remove_word("c")
-    print(trie.enumerate_words())
-    print(trie.has_word(""))
-
