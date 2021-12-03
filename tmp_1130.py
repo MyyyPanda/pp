@@ -8,8 +8,12 @@ class Trie:
     def _get_default_node() -> dict:
         return {Trie.is_word: False}
 
+    @staticmethod
+    def _is_word_valid(word):
+        return isinstance(word, str) and word.isalpha() and word.islower()
+
     def has_word(self, word: str) -> bool:
-        if not word:
+        if not self._is_word_valid(word):
             return False
 
         current_node = self.root
@@ -20,7 +24,7 @@ class Trie:
         return current_node.get(Trie.is_word)
 
     def add_word(self, word: str) -> None:
-        if not self.has_word(word):
+        if self._is_word_valid(word):
             current_node = self.root
             for letter in word:
                 if not current_node.get(letter):
@@ -55,15 +59,20 @@ class Trie:
             else:
                 self._get_all_words(v, result, prefix + k)
 
-    def enumerate_words(self, prefix: str) -> [str, ...]:
+    def enumerate_words(self, prefix: str="") -> [str, ...]:
+        """
+        :param prefix: only "" and lowercase alpha are valid
+        :return: all words with prefix, all words in trie if prefix is "", [] otherwise
+        """
         result = []
-        current_node = self.root
-        for letter in prefix:
-            current_node = current_node.get(letter)
-            if not current_node:
-                break
-        if current_node:
-            self._get_all_words(current_node, result, prefix)
+        if self._is_word_valid(prefix) or prefix == "":
+            current_node = self.root
+            for letter in prefix:
+                current_node = current_node.get(letter)
+                if not current_node:
+                    break
+            if current_node:
+                self._get_all_words(current_node, result, prefix)
         return result
 
 
@@ -79,16 +88,9 @@ if __name__ == "__main__":
     trie = Trie()
     for w in words:
         trie.add_word(w)
-    print(trie.enumerate_words(""))
-    print(trie.enumerate_words("a"))
-    print(trie.enumerate_words("app"))
-    trie.remove_word("art")
-    print(trie.enumerate_words("a"))
-    print(trie.enumerate_words("app"))
-    trie.add_word("c")
-    trie.add_word("a")
-    print(trie.enumerate_words(""))
-    trie.remove_word("a")
-    print(trie.enumerate_words(""))
-    trie.remove_word("123")
-    print(trie.enumerate_words("c"))
+    print(trie.enumerate_words())
+    trie.add_word("")
+    trie.remove_word("c")
+    print(trie.enumerate_words())
+    print(trie.has_word(""))
+
