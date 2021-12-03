@@ -34,20 +34,22 @@ class Trie:
 
     def remove_word(self, word: str) -> None:
         if self.has_word(word):
-            target_node = None
             pop_letter = None
             current_node = self.root
             for idx, letter in enumerate(word):
-                if idx != len(word) - 1:
-                    if current_node.get(Trie.is_word):
-                        target_node = current_node
+                if len(current_node.get(letter)) <= 2:
+                    if not pop_letter and (not current_node.get(letter).get(Trie.is_word) or idx == len(word)-1):
                         pop_letter = letter
                 else:
-                    if current_node.get(Trie.is_word):
-                        pop_letter = None
+                    pop_letter = None
                 current_node = current_node.get(letter)
-            if target_node and pop_letter:
-                target_node.pop(pop_letter)
+            if pop_letter:
+                current_node = self.root
+                for letter in word:
+                    if letter == pop_letter:
+                        current_node.pop(letter)
+                        break
+                    current_node = current_node.get(letter)
             else:
                 current_node.update({Trie.is_word: False})
 
